@@ -1,0 +1,6 @@
+[build]
+command = "npm start" # ou o comando que você usa para iniciar o servidor
+publish = "caminho/da/pasta/build" # substitua pelo caminho da pasta de build do React
+
+[build.environment]
+NODE_ENV = "production"

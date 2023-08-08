@@ -1,14 +1,16 @@
 var express = require('express');
 const conectarBancoDados = require('../middleware/conectarDb');
+const authUser = require('../middleware/authUser');
 const Livros = require('../models/livros');
 var router = express.Router();
 
 
-router.post('/', conectarBancoDados, async (req, res) => {
+router.post('/', authUser, conectarBancoDados, async (req, res) => {
   try {
     let {id, titulo, num_paginas, isbn, editora} = req.body
 
-    const criarLivro = await Livros.create({id, titulo, num_paginas, isbn, editora});
+    let usuarioLogado = req.userJwt.id;
+    const criarLivro = await Livros.create({id, titulo, num_paginas, isbn, editora, usuarioCriador: usuarioLogado});
 
     res.status(200).json({data: criarLivro});
 
@@ -21,9 +23,10 @@ router.post('/', conectarBancoDados, async (req, res) => {
 });
 
 
-router.get('/', conectarBancoDados, async (req, res) => {
+router.get('/', authUser, conectarBancoDados, async (req, res) => {
   try {
-    let listarLivros  = await Livros.find();
+    let usuarioLogado = req.userJwt.id;
+    let listarLivros  = await Livros.find({usuarioCriador: usuarioLogado});
 
     res.status(200).json(listarLivros);
   } catch(error) {
@@ -31,11 +34,12 @@ router.get('/', conectarBancoDados, async (req, res) => {
   }
 });
 
-router.get('/:id', conectarBancoDados, async (req, res) => {
+router.get('/:id', authUser, conectarBancoDados, async (req, res) => {
   try {
+    let usuarioLogado = req.userJwt.id;
     let livroId = req.params.id;
 
-    let listarUmLivro = await Livros.findOne({id: livroId});
+    let listarUmLivro = await Livros.findOne({id: livroId, usuarioCriador: usuarioLogado});
     res.status(200).json(listarUmLivro)
   } catch(error) {
     console.error(error)
@@ -43,13 +47,14 @@ router.get('/:id', conectarBancoDados, async (req, res) => {
 });
 
 
-router.put('/:id', conectarBancoDados, async (req, res) => {
+router.put('/:id', authUser, conectarBancoDados, async (req, res) => {
   try {
     let livroId = req.params.id;
+    let usuarioLogado = req.userJwt.id;
 
     let {titulo, num_paginas, isbn, editora} = req.body;
 
-    let atualizaLivro = await Livros.updateOne({id: livroId}, {titulo, num_paginas, isbn, editora});
+    let atualizaLivro = await Livros.updateOne({id: livroId, usuarioCriador: usuarioLogado}, {titulo, num_paginas, isbn, editora});
     if(atualizaLivro.modifiedCount > 0){
       const livroAtualizado =await Livros.findOne({ id: livroId})
       res.status(200).json({livro: livroAtualizado, mensagem: "Livro atualizado com sucesso."});
@@ -62,11 +67,12 @@ router.put('/:id', conectarBancoDados, async (req, res) => {
 });
 
 
-router.delete('/:id', conectarBancoDados, async (req, res) => {
+router.delete('/:id', authUser, conectarBancoDados, async (req, res) => {
   try {
+    let usuarioLogado = req.userJwt.id;
     let livroId = req.params.id;
 
-    let removerLivro = await Livros.deleteOne({id: livroId});
+    let removerLivro = await Livros.deleteOne({id: livroId, usuarioCriador: usuarioLogado});
     res.status(200).json({livro: removerLivro, mensagem: "Livro removido com sucesso."})
   } catch(err) {
     console.error(err);
