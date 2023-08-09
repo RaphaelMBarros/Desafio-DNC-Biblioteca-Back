@@ -18,9 +18,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 routes(app);
 
-if (process.env.NODE_ENV !== 'teste') {
+/*if (process.env.NODE_ENV !== 'teste') {
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
-}
+}*/ // esse trecho foi comentado para que no momento do deploy para a Netlify, ela use seu proprio servidor
 
 module.exports = app;
