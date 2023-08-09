@@ -12,7 +12,7 @@ router.post('/', authUser, conectarBancoDados, async (req, res) => {
     let usuarioLogado = req.userJwt.id;
     const criarLivro = await Livros.create({id, titulo, num_paginas, isbn, editora, usuarioCriador: usuarioLogado});
 
-    res.status(200).json({data: criarLivro});
+    res.status(200).json({criarLivro, mensagem: `Livro ${titulo} cadastrado com sucesso`});
 
   } catch(error) {
     console.error(error)

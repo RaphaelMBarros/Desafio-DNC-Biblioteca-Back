@@ -18,6 +18,7 @@ router.post('/criar', conectarBancoDados, async (req, res)=> {
         })
     } catch(err) {
         if (String(err).includes("email_1 dup key")){
+            res.status(404).json({mensagem: "Error: Ja' existe uma conta com este e-mail."})
             console.error("Error: Ja' existe uma conta com este e-mail.");
           }
       
@@ -42,15 +43,20 @@ router.post('/logar', conectarBancoDados, async (req, res)=> {
                     statusMensagem: "Usuario autenticado com sucesso.",
                     resposta: { "x-auth-token": token }
                 })
-            } else {  
+            } else { 
+                 
                 throw new Error("E-mail ou senha incorreto");
             }
-        }else {  
+        }else {
+            res.status(404).json({mensagem: "Erro ao logar, email ou senha incorretos"})  
             throw new Error("E-mail ou senha incorreto");    
         }
     } catch(err) {
         console.error(err)
-    }    
+        
+        }
+        
+        
     
 });
 

@@ -1,10 +1,10 @@
 const jwt = require('jsonwebtoken');
 
 const authUser = async (req, res, next) => {
-    const token = req.headers('x-auth-token');
+    const token = req.headers['x-auth-token'];
     
     if(!token) {
-        throw new Error('Token nao fornecido') 
+        return console.log('Token nao fornecido') 
     }
 
     try {
@@ -14,7 +14,7 @@ const authUser = async (req, res, next) => {
 
         next();
     } catch(err) {
-        conselo.error(err)
+        console.error(err)
         throw new Error('Token invalido')
     }
 };
