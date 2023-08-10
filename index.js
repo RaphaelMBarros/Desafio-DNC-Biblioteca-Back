@@ -3,13 +3,19 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
+const corsOptions = {
+    origin: 'http://localhost:5173', // Altere para o seu domínio de desenvolvimento
+    optionsSuccessStatus: 200 // Algumas versões do CORS exigem isso
+  };
+  
 
+  
 const routes = require('./src/routes');
 
 const app = express();
 require('dotenv').config();
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
