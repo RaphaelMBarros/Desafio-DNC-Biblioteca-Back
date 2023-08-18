@@ -4,7 +4,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 const corsOptions = {
-    origin: 'https://main--biblioteca-front.netlify.app/', // Altere para o seu domínio de desenvolvimento
+    origin: 'https://biblioteca-front.netlify.app/', // Altere para o seu domínio de desenvolvimento
     optionsSuccessStatus: 200 // Algumas versões do CORS exigem isso
   };
   
